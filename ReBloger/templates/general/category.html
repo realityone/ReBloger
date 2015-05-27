@@ -1,0 +1,17 @@
+{% extends "general/archive.html" %}
+{% import "general/macros.html" as macros %}
+{% set page_type = "archive" %}
+{% set category = current_category.name %}
+
+{% block archive_title %}
+    <div class="page-title">
+        <h4>Category: {{ category }}
+            <span>(page {{ post_paginate.page }} of {{ post_paginate.pages }})</span>
+        </h4>
+    </div>
+    <div class="clear"></div>
+{% endblock %}
+
+{% block post_nav %}
+    {{ macros.category_nav(category, post_paginate) }}
+{% endblock %}

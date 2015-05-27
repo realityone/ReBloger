@@ -1,0 +1,128 @@
+{% import 'general/macros.html' as macros %}
+{% set blog_url = url_for('general.index') %}
+{% set search_api = url_for('general.search') %}
+{% set theme_dev_url = 'http://www.andersnoren.se/' %}
+{% set theme_dev_name = 'Anders Noren' %}
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    {% block head %}
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"/>
+        <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>{{ blog_title }} - {{ blog_details }}</title>
+    {% endblock %}
+
+    {% block styles %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/Elsie.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/Dance_Script.css') }}" type="text/css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/Lato.css') }}" type="text/css">
+        <link rel="stylesheet" id="lingonberry_style-css" href="{{ url_for('static', filename='css/style.css') }}"
+              type="text/css" media="all"/>
+    {% endblock %}
+
+    {% block scripts %}
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/global.js') }}"></script>
+    {% endblock %}
+</head>
+
+<body class="{{ page_type }} blog custom-background">
+
+{% block body %}
+
+    <div class="navigation">
+        {% block navigation %}
+            {{ macros.navigation_bar(nav_list, search_api) }}
+        {% endblock %}
+    </div>
+
+    <div class="header section">
+        {% block page_header %}
+            <div class="header-inner section-inner">
+                <a href="{{ blog_url }}" title="{{ blog_title }}" rel="home" class="logo">
+                    <img src="{{ url_for('static', filename='img/avatar.png') }}" alt="{{ blog_title }}">
+                </a>
+
+                <h1 class="blog-title">
+                    <a href="{{ blog_url }}" title="{{ blog_title }}" rel="home">{{ blog_title }}</a>
+                </h1>
+
+                <div class="nav-toggle">
+                    {{ macros.nav_toggle() }}
+                </div>
+
+                <div class="clear"></div>
+            </div>
+        {% endblock %}
+    </div>
+
+    {% block page_content %}
+        {#    define your page content here    #}
+    {% endblock %}
+
+    <div class="footer section">
+        {% block page_footer %}
+            <div class="footer-inner section-inner">
+                <div class="footer-a widgets">
+                    {% block footer_a %}
+                        <div class="widget">
+                            {{ macros.widget_categories(category_list) }}
+                        </div>
+                        <div class="widget">
+                            {{ macros.widget_archive(widget_archive_list) }}
+                        </div>
+                    {% endblock %}
+                    <div class="clear"></div>
+                </div>
+
+                <div class="footer-b widgets">
+                    {% block footer_b %}
+                        <div class="widget">
+                            {{ macros.widget_search(search_api) }}
+                        </div>
+                        <div class="widget">
+                            {{ macros.widget_recent_entries(recent_post_list) }}
+                        </div>
+                    {% endblock %}
+                    <div class="clear"></div>
+                </div>
+
+                <div class="footer-c widgets">
+                    {% block footer_c %}
+                        <div class="widget">
+                            {{ macros.widget_tag_cloud(tag_list) }}
+                        </div>
+                    {% endblock %}
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        {% endblock %}
+    </div>
+
+    <div class="credits section">
+        {% block credit_info %}
+            <div class="credits-inner section-inner">
+                <p class="credits-left">
+                    {% block credit_left %}
+                        <span>Copyright</span> © 2015
+                        <a href="{{ blog_url }}" title="{{ blog_title }}">{{ blog_title }}</a>
+                    {% endblock %}
+                </p>
+
+                <p class="credits-right">
+                    {% block credit_right %}
+                        <span>Theme by <a href="{{ theme_dev_url }}">{{ theme_dev_name }}</a> - </span>
+                        <a title="To the top" class="tothetop">Up ↑</a>
+                    {% endblock %}
+                </p>
+
+                <div class="clear"></div>
+            </div>
+        {% endblock %}
+    </div>
+{% endblock %}
+</body>
+</html>

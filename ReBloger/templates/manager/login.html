@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{{ title }} › Login</title>
+    <link rel="stylesheet" id="login-css" href="{{ url_for('static', filename='css/login.min.css') }}"
+          type="text/css" media="all">
+    <link rel="stylesheet" id="dashicons-css" href="{{ url_for('static', filename='css/dashicons.css') }}"
+          type="text/css" media="all">
+    <link rel="stylesheet" id="buttons-css" href="{{ url_for('static', filename='css/buttons.min.css') }}"
+          type="text/css" media="all">
+    <meta name="robots" content="noindex,follow">
+</head>
+<body class="login wp-core-ui">
+<div id="login">
+    {% if message %}
+        <p class="message">{{ message }}<br></p>
+    {% endif %}
+
+    <form name="loginform" id="loginform" method="post">
+        {% block login_form %}
+            {{ form.hidden_tag() }}
+            {{ form.email.label }} {{ form.email(id='user_login', class='input') }}
+            {{ form.password.label }} {{ form.password(id='user_pass', class='input') }}
+            {{ form.remember_me(id='rememberme') }} {{ form.remember_me.label(style='font-size: 12px;') }}
+            {{ form.submit(class='button button-primary button-large') }}
+        {% endblock %}
+    </form>
+</div>
+<div class="clear"></div>
+</body>
+</html>

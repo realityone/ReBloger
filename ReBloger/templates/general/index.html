@@ -1,0 +1,10 @@
+{% extends "general/archive.html" %}
+{% import "general/macros.html" as macros %}
+{% set page_type = "home" %}
+{% set endpoint = 'general.page' %}
+
+{% block archive_title %}
+    {% if archive_title %}
+        {{ super() }}
+    {% endif %}
+{% endblock %}

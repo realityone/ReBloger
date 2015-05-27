@@ -1,0 +1,17 @@
+{% extends "general/archive.html" %}
+{% import "general/macros.html" as macros %}
+{% set page_type = "archive" %}
+{% set author = current_author.name %}
+
+{% block archive_title %}
+    <div class="page-title">
+        <h4>Author: {{ author }}
+            <span>(page {{ post_paginate.page }} of {{ post_paginate.pages }})</span>
+        </h4>
+    </div>
+    <div class="clear"></div>
+{% endblock %}
+
+{% block post_nav %}
+    {{ macros.author_nav(author, post_paginate) }}
+{% endblock %}

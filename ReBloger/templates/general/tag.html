@@ -1,0 +1,17 @@
+{% extends "general/archive.html" %}
+{% import "general/macros.html" as macros %}
+{% set page_type = "archive" %}
+{% set topic = current_tag.topic %}
+
+{% block archive_title %}
+    <div class="page-title">
+        <h4>Tag: {{ topic }}
+            <span>(page {{ post_paginate.page }} of {{ post_paginate.pages }})</span>
+        </h4>
+    </div>
+    <div class="clear"></div>
+{% endblock %}
+
+{% block post_nav %}
+    {{ macros.tag_nav(topic, post_paginate) }}
+{% endblock %}

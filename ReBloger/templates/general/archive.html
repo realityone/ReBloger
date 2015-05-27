@@ -1,0 +1,28 @@
+{% extends "general/base.html" %}
+{% import "general/macros.html" as macros %}
+
+{% set page_type = "archive" %}
+
+{% block page_content %}
+    <div class="content section-inner">
+        <div class="posts">
+            {% block archive_title %}
+                <div class="page-title">
+                    <h4>{{ archive_title }}
+                        <span>(page {{ post_paginate.page }} of {{ post_paginate.pages }})</span>
+                    </h4>
+                </div>
+                <div class="clear"></div>
+            {% endblock %}
+            {% for post_item in post_paginate.items %}
+                {{ macros.gen_post_archive(post_item, is_admin) }}
+            {% endfor %}
+        </div>
+        <div class="post-nav archive-nav">
+            {% block post_nav %}
+                {{ macros.archive_nav(post_paginate) }}
+            {% endblock %}
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "general/base.html" %}
+{% import "general/macros.html" as macros %}
+
+{% set page_type = "single" %}
+{% set current_post = current_post_pag.items[0] %}
+
+{% block page_content %}
+    <div class="content section-inner">
+        <div class="post">
+            <div class="content-inner">
+                <div class="post-header">
+                    {% block post_content_header %}
+                        <h2 class="post-title">{{ current_post.title }}</h2>
+                        {{ macros.gen_post_meta(current_post, is_admin) }}
+                    {% endblock %}
+                </div>
+
+                <div class="post-content">
+                    {% block post_content_body %}
+                        {{ current_post.markdown_html | safe }}
+                    {% endblock %}
+                </div>
+
+                <div class="post-cat-tags">
+                    {% block post_cat_tags %}
+                        <p class="post-categories">Categories: <a
+                                href="{{ macros.get_cat_url(current_post.category.name) }}"
+                                rel="category tag">{{ current_post.category.name }}</a>
+                        </p>
+
+                        <p class="post-tags">Tags:
+                            {% for tag in current_post.tags %}
+                                {% set topic = tag.topic %}
+                                <a href="{{ macros.get_tag_url(topic) }}"
+                                   rel="tag">{{ topic }}</a>
+                                {% if not loop.last %}
+                                    <span>, </span>
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                    {% endblock %}
+                </div>
+            </div>
+
+            <div class="post-nav">
+                {% block post_nav %}
+                    {% if current_post_pag.has_prev %}
+                        {% set older_post = current_post_pag.prev().items[0] %}
+                        <a class="post-nav-older" title="Previous post: {{ older_post.title }}"
+                           href="{{ macros.get_post_url(older_post.id) }}">« {{ older_post.title }}</a>
+                    {% endif %}
+
+                    {% if current_post_pag.has_next %}
+                        {% set newer_post = current_post_pag.next().items[0] %}
+                        <a class="post-nav-newer" title="Next post: {{ newer_post.title }}"
+                           href="{{ macros.get_post_url(newer_post.id) }}">{{ newer_post.title }} »</a>
+                    {% endif %}
+
+                    <div class="clear"></div>
+                {% endblock %}
+            </div>
+
+            <div id="respond" class="comment-respond">
+                {% block comment %}
+                    {% if can_comment %}
+                        <h3 id="reply-title" class="comment-reply-title">发表评论
+                            <small><a rel="nofollow" id="cancel-comment-reply-link" href="#respond"
+                                      style="display:none;">取消回复</a></small>
+                        </h3>
+
+                        <form action="{{ url_for('comment') }}" method="post" id="commentform" class="comment-form">
+                            <p class="comment-notes">Your email address will not be published.</p>
+
+                            <p class="comment-form-author">
+                                <input id="author" name="author" type="text" placeholder="Name" value="" size="30">
+                                <label for="author">Author</label> <span class="required">*</span>
+                            </p>
+
+                            <p class="comment-form-email">
+                                <input id="email" name="email" type="text" placeholder="Email" value="" size="30">
+                                <label for="email">Email</label> <span class="required">*</span>
+                            </p>
+
+                            <p class="comment-form-url">
+                                <input id="url" name="url" type="text" placeholder="Website" value="" size="30">
+                                <label for="url">Website</label>
+                            </p>
+
+                            <p class="comment-form-comment">
+                                <textarea id="comment" name="comment" cols="45" rows="6" required=""></textarea>
+                                <label for="comment"></label>
+                            </p>
+
+                            <p class="form-allowed-tags" id="form-allowed-tags">您可以使用这些<abbr
+                                    title="HyperText Markup Language">HTML</abbr>标签和属性： <code>&lt;a href="" title=""&gt;
+                                &lt;abbr title=""&gt; &lt;acronym title=""&gt; &lt;b&gt; &lt;blockquote cite=""&gt;
+                                &lt;cite&gt; &lt;code&gt; &lt;del datetime=""&gt; &lt;em&gt; &lt;i&gt; &lt;q cite=""&gt;
+                                &lt;s&gt; &lt;strike&gt; &lt;strong&gt; </code>
+                            </p>
+
+                            <p class="form-submit">
+                                <input name="submit" type="submit" id="submit" class="submit" value="发表评论">
+                                <input type="hidden" name="comment_post_ID" value="{{ current_post.id }}"
+                                       id="comment_post_ID">
+                                <input type="hidden" name="comment_parent" id="comment_parent" value="0">
+                            </p>
+
+                        </form>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,238 @@
+{# urls #}
+{% macro get_post_url(post_id) %}
+    {{ url_for('general.post', post_id=post_id) }}
+{% endmacro %}
+
+{% macro get_page_url(p) %}
+    {{ url_for('general.page', p=p) }}
+{% endmacro %}
+
+{% macro get_cat_url(category_name, p=1) %}
+    {{ url_for('general.category', category_name=category_name, p=p) }}
+{% endmacro %}
+
+{% macro get_tag_url(topic, p=1) %}
+    {{ url_for('general.tag', topic=topic, p=p) }}
+{% endmacro %}
+
+{% macro get_author_url(author_name, p=1) %}
+    {{ url_for('general.author', author_name=author_name, p=p) }}
+{% endmacro %}
+
+{% macro get_archive_url(start_date, end_date) %}
+    {{ url_for('general.archive', start_date=start_date, end_date=end_date) }}
+{% endmacro %}
+{# urls_end #}
+
+{# widget_utils #}
+{% macro gen_tag_cloud(tag_item) %}
+    {% set tag_url = get_tag_url(tag_item.topic) %}
+    <a href="{{ tag_url }}" title="{{ tag_item.post_quantity }}" style="font-size: 13pt;">{{ tag_item.topic }}</a>
+{% endmacro %}
+
+{% macro gen_category(cat_item) %}
+    {% set cat_url = get_cat_url(cat_item.name) %}
+    <li class="cat-item">
+        <a href="{{ cat_url }}">{{ cat_item.name }}</a> ({{ cat_item.post_quantity }})
+    </li>
+{% endmacro %}
+
+{% macro gen_widget_archive(archive_item) %}
+    {% set archive_url = get_archive_url(archive_item.start_date, archive_item.end_date) %}
+    <li>
+        <a href="{{ archive_url }}">{{ archive_item.date_range_str }}</a> ({{ archive_item.quantity }})
+    </li>
+{% endmacro %}
+
+{% macro gen_recent_post(post_item) %}
+    {% set post_url = get_post_url(post_item.id) %}
+    <li>
+        <a href="{{ post_url }}">{{ post_item.title }}</a>
+    </li>
+{% endmacro %}
+{# widget_utils_end #}
+
+{# widgets #}
+{% macro widget_search(search_api) %}
+    <div class="widget_search">
+        <div class="widget-content">
+            <form method="get" class="search-form" action="{{ search_api }}">
+                <label for="widget-s"></label>
+                <input type="search" value="Type and press enter"
+                       onfocus="if(this.value=='Type and press enter')this.value='';"
+                       onblur="if(this.value=='')this.value='Type and press enter';"
+                       name="key"
+                       id="widget-s">
+                <input type="submit" id="widget-search" value="Search"
+                       class="button hidden">
+            </form>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro widget_recent_entries(recent_post_list) %}
+    <div class="widget_recent_entries">
+        <div class="widget-content"><h3 class="widget-title">近期文章</h3>
+            <ul>
+                {% for recent_post in recent_post_list %}
+                    {{ gen_recent_post(recent_post) }}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro widget_tag_cloud(tag_list) %}
+    <div class="widget_tag_cloud">
+        <div class="widget-content"><h3 class="widget-title">标签云</h3>
+
+            <div class="tagcloud">
+                {% for tag_item in tag_list %}
+                    {{ gen_tag_cloud(tag_item) }}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro widget_archive(widget_archive_list) %}
+    <div class="widget_archive">
+        <div class="widget-content"><h3 class="widget-title">周度归档</h3>
+            <ul>
+                {% for widget_archive in widget_archive_list %}
+                    {{ gen_widget_archive(widget_archive) }}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro widget_categories(category_list) %}
+    <div class="widget_categories">
+        <div class="widget-content"><h3 class="widget-title">分类目录</h3>
+            <ul>
+                {% for category_item in category_list %}
+                    {{ gen_category(category_item) }}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+{# widgets_end #}
+
+{# nav #}
+{% macro gen_nav_item(nav_item) %}
+    <li id="menu-{{ nav_item.id }}">
+        <a href="{{ nav_item.target_url }}">{{ nav_item.name }}</a>
+    </li>
+{% endmacro %}
+
+{% macro nav_search(search_api) %}
+    <form method="get" class="search-form" action="{{ search_api }}">
+        <label for="nav-s"></label>
+        <input type="search" value="Type and press enter"
+               onfocus="if(this.value=='Type and press enter')this.value='';"
+               onblur="if(this.value=='')this.value='Type and press enter';" name="key" id="nav-s"/>
+        <input type="submit" id="nav-search" value="Search" class="button hidden">
+    </form>
+{% endmacro %}
+
+{% macro navigation_bar(nav_list, search_api) %}
+    <div class="navigation-inner section-inner">
+        <ul class="blog-menu">
+            {% for nav_item in nav_list %}
+                {{ gen_nav_item(nav_item) }}
+            {% endfor %}
+        </ul>
+        {{ nav_search(search_api) }}
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro nav_toggle() %}
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="clear"></div>
+{% endmacro %}
+{# nav_end #}
+
+{# posts #}
+{% macro gen_post_meta(post_item, is_admin=False) %}
+    <div class="post-meta">
+        <span class="post-date">
+            <span>Posted </span><a href="#archive" title="{{ post_item.title }}">{{ post_item.datetime }}</a></span>
+        <span class="post-author"> by <a href="{{ get_author_url(post_item.author.name) }}"
+                                         title="由{{ post_item.author.name }}发布"
+                                         rel="author">{{ post_item.author.name }}</a></span>
+        {% if is_admin %}
+            <a class="post-edit-link" href="{{ url_for('editor', post_id=post_item.id) }}">Edit</a>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro gen_post_archive(post_item, is_admin=False) %}
+    {% set post_url = get_post_url(post_item.id) %}
+    {% set author_url = get_author_url(post_item.author.name) %}
+
+    <div id="{{ post_item.id }}" class="post">
+        <div class="post-bubbles">
+            <a href="{{ post_url }}" class="format-bubble"></a>
+        </div>
+        <div class="content-inner">
+            <div class="post-header">
+                <h2 class="post-title"><a href="{{ post_url }}" rel="bookmark"
+                                          title="{{ post_item.title }}">{{ post_item.title }}</a></h2>
+                {{ gen_post_meta(post_item, is_admin) }}
+            </div>
+            <div class="post-content">
+                {{ post_item.summary | safe }}
+                <p><a href="{{ post_url }}" class="more-link">Continue reading</a></p>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endmacro %}
+
+{% macro archive_nav(post_paginate) %}
+    {% if post_paginate.has_next %}
+        <a href="{{ get_page_url(post_paginate.next_num) }}" class="post-nav-older">« Older<span> posts</span></a>
+    {% endif %}
+    {% if post_paginate.has_prev %}
+        <a href="{{ get_page_url(post_paginate.prev_num) }}" class="post-nav-newer">Newer<span> posts</span> »</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro category_nav(category_name, post_paginate) %}
+    {% if post_paginate.has_next %}
+        <a href="{{ get_cat_url(category_name, post_paginate.next_num) }}" class="post-nav-older">« Older<span> posts</span></a>
+    {% endif %}
+    {% if post_paginate.has_prev %}
+        <a href="{{ get_cat_url(category_name, post_paginate.prev_num) }}" class="post-nav-newer">Newer<span> posts</span> »</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro tag_nav(topic, post_paginate) %}
+    {% if post_paginate.has_next %}
+        <a href="{{ get_tag_url(topic, post_paginate.next_num) }}" class="post-nav-older">« Older<span> posts</span></a>
+    {% endif %}
+    {% if post_paginate.has_prev %}
+        <a href="{{ get_cat_url(topic, post_paginate.prev_num) }}" class="post-nav-newer">Newer<span> posts</span> »</a>
+    {% endif %}
+{% endmacro %}
+
+{% macro author_nav(author, post_paginate) %}
+    {% if post_paginate.has_next %}
+        <a href="{{ get_author_url(author, post_paginate.next_num) }}" class="post-nav-older">« Older<span> posts</span></a>
+    {% endif %}
+    {% if post_paginate.has_prev %}
+        <a href="{{ get_author_url(author, post_paginate.prev_num) }}" class="post-nav-newer">Newer<span> posts</span> »</a>
+    {% endif %}
+{% endmacro %}
+{# posts_end #}

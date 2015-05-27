@@ -1,0 +1,103 @@
+{% extends "general/base.html" %}
+{% set page_type = 'page' %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='codemirror/lib/codemirror.js') }}"></script>
+    <script src="{{ url_for('static', filename='codemirror/mode/markdown/markdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='codemirror/custom.js') }}"></script>
+    <script src="{{ url_for('static', filename='select2/select2.min.js') }}"></script>
+    <script>
+    var post_content_md = "{{ edit_post.post_content_md }}";
+    </script>
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='select2/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/lib/codemirror.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/theme/neo.css') }}">
+{% endblock %}
+
+{% block page_content %}
+    <div class="content section-inner">
+        <div class="posts">
+            <div class="post">
+                <div class="content-inner comments-allowed">
+                    <div class="post-header">
+                        <h2 class="post-title">
+                            {% if post_id %}
+                                {{ 'Edit Post' }}
+                            {% else %}
+                                {{ 'New Post' }}
+                            {% endif %}
+                        </h2>
+                    </div>
+
+                    <div class="post-content">
+                        {% block page_content_body %}
+                            <form action="#target" method="post">
+                                <div class="cell" style="background-color: #f7f7f7;">
+                                    <span>文章标题</span>
+                                </div>
+                                <div class="cell" style="padding: 0px">
+                                    <textarea class="msl" name="title" maxlength="120" id="post_title"
+                                              autofocus="autofocus" rows="1"
+                                              placeholder="请输入文章标题，最长 120 个字符">{{ edit_post.title }}</textarea>
+                                </div>
+
+                                <div class="cell" style="background-color: #f7f7f7;">
+                                    <span>文章分类与作者</span>
+                                </div>
+                                <div class="cell">
+                                    <div style="float: left; width: 49%; text-align: center;">
+                                        <select style="width: 90%;" name="categorys" id="post_categorys">
+                                            {% for category in category_list %}
+                                                <option value="{{ category.id }}">{{ category.name }}
+                                                    ({{ category.post_quantity }})
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="float: left; width: 49%; text-align: center;">
+                                        <select style="width: 90%;" name="authors" id="post_authors">
+                                            {% for author in author_list %}
+                                                <option value="{{ author.id }}">{{ author.name }}
+                                                    ({{ author.post_quantity }})
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+
+                                <div class="cell" style="background-color: #f7f7f7;">
+                                    <span>文章正文</span>
+                                </div>
+                                <div>
+                                    <textarea maxlength="20000" id="editor" name="content"
+                                              style="display: none;"></textarea>
+                                </div>
+
+                                <div class="cell" style="background-color: #f7f7f7;">
+                                    <span>标签</span>
+                                </div>
+                                <div class="cell" style="padding: 0px">
+                                    <textarea class="msl" name="tags" maxlength="120" id="post_tags"
+                                              rows="1"
+                                              placeholder="可输入多个标签，使用 | 分割标签">{{ edit_post.tags }}</textarea>
+                                </div>
+
+                                <div class="cell">
+                                    <input name="submit" type="submit" id="post_submit" class="button" value="发布文章">
+                                </div>
+                            </form>
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}

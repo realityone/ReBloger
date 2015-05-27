@@ -1,0 +1,25 @@
+{% extends "general/base.html" %}
+{% set page_type = "page" %}
+
+{% block page_content %}
+    <div class="content section-inner">
+        <div class="posts">
+            <div class="post">
+                <div class="content-inner comments-allowed">
+                    <div class="post-header">
+                        {% block page_content_header %}
+                            <h2 class="post-title">{{ page_title }}</h2>
+                        {% endblock %}
+                    </div>
+
+                    <div class="post-content">
+                        {% block page_content_body %}
+                            {{ page_content_html | safe }}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+{% endblock %}
